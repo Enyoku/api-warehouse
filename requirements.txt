@@ -1,0 +1,11 @@
+fastapi
+fastapi-users
+asyncpg
+alembic
+bcrypt
+pytest
+pydantic
+pytest-asyncio
+uvicorn
+sqlalchemy
+python-dotenv
