@@ -12,6 +12,7 @@ sys.path.append(os.path.join(sys.path[0], 'api'))
 from api.client.models import *
 from api.auth.models import *
 from api.category.models import *
+from api.item.models import *
 from api.database import metadata, Base as base
 from api.config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER
 
