@@ -10,3 +10,6 @@ class Client(Base):
     full_name = Column(String(length=50), nullable=False)
     email = Column(String(length=50), nullable=False)
     address = Column(String(length=50), nullable=False)
+
+
+client = Client.__table__
