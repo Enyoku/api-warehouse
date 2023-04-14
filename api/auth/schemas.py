@@ -2,6 +2,7 @@ from typing import Optional
 from datetime import datetime
 
 from fastapi_users import schemas
+from pydantic import BaseModel
 
 
 class UserRead(schemas.BaseUser[int]):
@@ -31,4 +32,15 @@ class UserCreate(schemas.BaseUserCreate):
 
 
 class UserUpdate(schemas.BaseUserUpdate):
-    pass
+    username: Optional[str]
+    full_name: Optional[str]
+    position: Optional[str]
+    password: Optional[str]
+    email: Optional[str]
+    is_active: Optional[bool]
+    is_superuser: Optional[bool]
+    is_verified: Optional[bool]
+
+
+class Ver(BaseModel):
+    is_verified: bool

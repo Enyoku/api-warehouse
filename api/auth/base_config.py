@@ -25,4 +25,4 @@ fastapi_users = FastAPIUsers[Employee, int](
 )
 
 current_user = fastapi_users.current_user()
-current_superuser = fastapi_users.current_user(superuser=True)
+current_verified_user = fastapi_users.current_user(verified=True)

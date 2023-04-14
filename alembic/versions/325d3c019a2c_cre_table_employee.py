@@ -1,7 +1,7 @@
 """cre table employee
 
 Revision ID: 325d3c019a2c
-Revises: a8272c29ab05
+Revises: 8c309090101c
 Create Date: 2023-04-11 23:13:23.463227
 
 """
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = '325d3c019a2c'
-down_revision = 'a8272c29ab05'
+down_revision = '8c309090101c'
 branch_labels = None
 depends_on = None
 

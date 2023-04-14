@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .routers import routers
+from api.routers import routers
 
 app = FastAPI(title="warehouse-api")
 

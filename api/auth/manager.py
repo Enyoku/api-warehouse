@@ -6,7 +6,7 @@ from fastapi_users import (BaseUserManager, IntegerIDMixin,
                            exceptions, models, schemas)
 
 from api.auth.models import Employee
-from api.auth.utils import get_user_db
+from api.auth.utils import get_user_db, generate_cookie
 from api.config import SECRET
 
 
@@ -17,7 +17,7 @@ class UserManager(IntegerIDMixin, BaseUserManager[Employee, int]):
     async def on_after_register(
         self, user: Employee, request: Optional[Request] = None
     ) -> None:
-        print(f"User {user.id} has registered")
+        print(f"User with id {user.id} has registered")
 
     async def create(
         self,
@@ -48,7 +48,8 @@ class UserManager(IntegerIDMixin, BaseUserManager[Employee, int]):
 
     async def on_after_request_verify(
         self, user: Employee, token: str, request: Optional[Request] = None
-    ):
+    ) -> None:
+        generate_cookie(token)
         print(f"Verification requested for user {user.full_name}. Verification token: {token}")
 
     async def on_after_verify(

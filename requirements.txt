@@ -1,5 +1,5 @@
 fastapi
-fastapi-users
+fastapi-users[sqlalchemy]
 asyncpg
 alembic
 bcrypt
@@ -9,3 +9,4 @@ pytest-asyncio
 uvicorn
 sqlalchemy
 python-dotenv
+gunicorn
