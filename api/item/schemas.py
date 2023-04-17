@@ -29,6 +29,19 @@ class ItemRead(BaseModel):
         orm_mode = True
 
 
+class ItemReadModified(BaseModel):
+    item_name: str
+    article: str
+    category_name: str
+    firm: str
+    description: str
+    price: float
+    amount: int
+
+    class Config:
+        orm_mode = True
+
+
 class ItemUpdate(BaseModel):
     item_name: str
     article: str

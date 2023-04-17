@@ -43,3 +43,17 @@ class OrderListRead(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class OrderListReadModified(BaseModel):
+    order_info_id: int
+    item_name: str
+    article: str
+    category_id: int
+    firm: str
+    operation_code: str
+    amount: int
+    price: float
+
+    class Config:
+        orm_mode = True

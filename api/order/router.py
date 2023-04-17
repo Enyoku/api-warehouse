@@ -6,8 +6,9 @@ from sqlalchemy import insert, select, update, delete
 
 from api.database import get_async_session
 from api.order.models import order_info, order_list
+from api.item.models import item
 from api.order.schemas import OrderInfoCreate, OrderInfoRead, OrderInfoUpdate
-from api.order.schemas import OrderListCreate, OrderListRead
+from api.order.schemas import OrderListCreate, OrderListRead, OrderListReadModified
 
 
 order_info_router = APIRouter(tags=["OrderInfo"], prefix="/order_info")
@@ -56,9 +57,11 @@ async def create_order_list(new_order: OrderListCreate, session: AsyncSession = 
     return {"status": "created"}
 
 
-@order_list_router.get("{id}", response_model=List[OrderListRead])
-async def get_order_list_by_id(id: int, session: AsyncSession = Depends(get_async_session)):
-    query = select(order_list).where(order_list.c.order_info_id == id)
+@order_list_router.get("{id}", response_model=List[OrderListReadModified])
+async def get_order_list_modified(id: int, session: AsyncSession = Depends(get_async_session)):
+    query = select(order_list.c.order_info_id, item.c.item_name, item.c.article, item.c.category_id, item.c.firm,
+                   order_list.c.operation_code, order_list.c.amount, order_list.c.price).where(
+        order_list.c.order_info_id == id).join_from(order_list, item, order_list.c.item_id == item.c.item_id)
     result = await session.execute(query)
     await session.commit()
     return result.fetchall()
