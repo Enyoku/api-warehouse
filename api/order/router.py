@@ -23,6 +23,14 @@ async def create_order_info(new_order: OrderInfoCreate, session: AsyncSession = 
     return {"status": "created"}
 
 
+@order_info_router.get("", response_model=List[OrderInfoRead])
+async def get_all_order_info(sesion: AsyncSession = Depends(get_async_session)):
+    query = select(order_info)
+    result = await sesion.execute(query)
+    await sesion.commit()
+    return result.fetchall()
+
+
 @order_info_router.get("{id}", response_model=List[OrderInfoRead])
 async def get_order_info_by_id(id: int, session: AsyncSession = Depends(get_async_session)):
     query = select(order_info).where(order_info.c.order_id == id)

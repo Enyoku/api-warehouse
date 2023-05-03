@@ -17,6 +17,7 @@ class ItemCreate(BaseModel):
 
 
 class ItemRead(BaseModel):
+    item_id: int
     item_name: str
     article: str
     category_id: int
