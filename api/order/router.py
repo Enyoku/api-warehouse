@@ -31,7 +31,7 @@ async def get_all_order_info(sesion: AsyncSession = Depends(get_async_session)):
     return result.fetchall()
 
 
-@order_info_router.get("{id}", response_model=List[OrderInfoRead])
+@order_info_router.get("/{id}", response_model=List[OrderInfoRead])
 async def get_order_info_by_id(id: int, session: AsyncSession = Depends(get_async_session)):
     query = select(order_info).where(order_info.c.order_id == id)
     result = await session.execute(query)
@@ -39,7 +39,7 @@ async def get_order_info_by_id(id: int, session: AsyncSession = Depends(get_asyn
     return result.fetchall()
 
 
-@order_info_router.patch("{id}")
+@order_info_router.patch("/{id}")
 async def update_order_info(id: int, updated_order_info: OrderInfoUpdate, session: AsyncSession = Depends(get_async_session)):
     query = update(order_info).values(**updated_order_info.dict()).where(order_info.c.order_id == id)
     await session.execute(query)
@@ -47,7 +47,7 @@ async def update_order_info(id: int, updated_order_info: OrderInfoUpdate, sessio
     return {"status": "updated"}
 
 
-@order_info_router.delete("{id}")
+@order_info_router.delete("/{id}")
 async def delete_order_info(id: int, session: AsyncSession = Depends(get_async_session)):
     query = delete(order_info).where(order_info.c.order_id == id)
     await session.execute(query)
@@ -65,9 +65,9 @@ async def create_order_list(new_order: OrderListCreate, session: AsyncSession = 
     return {"status": "created"}
 
 
-@order_list_router.get("{id}", response_model=List[OrderListReadModified])
+@order_list_router.get("/{id}", response_model=List[OrderListReadModified])
 async def get_order_list_modified(id: int, session: AsyncSession = Depends(get_async_session)):
-    query = select(order_list.c.order_info_id, item.c.item_name, item.c.article, item.c.category_id, item.c.firm,
+    query = select(order_list.c.order_info_id, item.c.item_id, item.c.item_name, item.c.article, item.c.category_id, item.c.firm,
                    order_list.c.operation_code, order_list.c.amount, order_list.c.price).where(
         order_list.c.order_info_id == id).join_from(order_list, item, order_list.c.item_id == item.c.item_id)
     result = await session.execute(query)
@@ -75,9 +75,9 @@ async def get_order_list_modified(id: int, session: AsyncSession = Depends(get_a
     return result.fetchall()
 
 
-@order_list_router.delete("{id}")
+@order_list_router.delete("/{id}")
 async def delete_order_list(id: int, session: AsyncSession = Depends(get_async_session)):
-    query = delete(order_list).where(order_list.c.order_list_id == id)
+    query = delete(order_list).where(order_list.c.item_id == id)
     await session.execute(query)
     await session.commit()
     return {"status": "deleted"}

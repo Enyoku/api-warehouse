@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel
 
 
@@ -47,6 +48,7 @@ class OrderListRead(BaseModel):
 
 class OrderListReadModified(BaseModel):
     order_info_id: int
+    item_id: int
     item_name: str
     article: str
     category_id: int
