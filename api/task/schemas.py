@@ -22,6 +22,19 @@ class TaskRead(BaseModel):
         orm_mode = True
 
 
+class TaskReadModified(BaseModel):
+    task_id: int
+    manager_id: int
+    manager_name: str
+    storekeeper_id: Optional[int]
+    storekeeper_name: Optional[str]
+    order_info_id: int
+    task_status: str
+
+    class Config:
+        orm_mode = True
+
+
 class TaskUpdate(BaseModel):
     storekeeper_id: Optional[int]
     task_status: str
