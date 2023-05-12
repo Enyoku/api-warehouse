@@ -67,7 +67,8 @@ async def create_order_list(new_order: OrderListCreate, session: AsyncSession = 
 
 @order_list_router.get("/{id}", response_model=List[OrderListReadModified])
 async def get_order_list_modified(id: int, session: AsyncSession = Depends(get_async_session)):
-    query = select(order_list.c.order_info_id, item.c.item_id, item.c.item_name, item.c.article, item.c.category_id,
+    query = select(order_list.c.order_list_id, order_list.c.order_info_id, item.c.item_id, item.c.item_name,
+                   item.c.article, item.c.category_id,
                    item.c.firm, order_list.c.operation_code, order_list.c.amount, order_list.c.price).where(
         order_list.c.order_info_id == id).join_from(order_list, item, order_list.c.item_id == item.c.item_id)
     result = await session.execute(query)
@@ -77,7 +78,7 @@ async def get_order_list_modified(id: int, session: AsyncSession = Depends(get_a
 
 @order_list_router.delete("/{id}")
 async def delete_order_list(id: int, session: AsyncSession = Depends(get_async_session)):
-    query = delete(order_list).where(order_list.c.item_id == id)
+    query = delete(order_list).where(order_list.c.order_list_id == id)
     await session.execute(query)
     await session.commit()
     return {"status": "deleted"}

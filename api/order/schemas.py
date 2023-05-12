@@ -47,6 +47,7 @@ class OrderListRead(BaseModel):
 
 
 class OrderListReadModified(BaseModel):
+    order_list_id: int
     order_info_id: int
     item_id: int
     item_name: str

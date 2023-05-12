@@ -1,4 +1,5 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, Numeric
+from sqlalchemy.orm import relationship
 
 from api.database import Base
 from api.client.models import client

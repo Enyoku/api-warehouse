@@ -38,7 +38,6 @@ async def get_all_task(session: AsyncSession = Depends(get_async_session)):
                    empl2.c.full_name.label("storekeeper_name"), task.c.order_info_id,
                     task.c.task_status)\
         .join(empl1, task.c.manager_id == empl1.c.id, isouter=True).join(empl2, task.c.storekeeper_id == empl2.c.id, isouter=True)
-    print(query.compile(dialect=postgresql.dialect()))
     result = await session.execute(query)
     await session.commit()
     return result.fetchall()
