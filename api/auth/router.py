@@ -19,7 +19,7 @@ user_router = APIRouter(tags=["User"], prefix="/user")
 user_router.include_router(fastapi_users.get_users_router(UserRead, UserUpdate))
 
 
-@auth_router.post("/fake-verification")
+@auth_router.patch("/fake-verification/{id}")
 async def test(id: int, ver: Ver, session: AsyncSession = Depends(get_async_session)):
     query = update(empl).values(**ver.dict()).where(empl.c.id == id)
     await session.execute(query)
