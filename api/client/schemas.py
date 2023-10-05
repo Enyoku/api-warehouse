@@ -3,6 +3,16 @@ from typing import Optional
 from pydantic import BaseModel
 
 
+class JsonClientCreate(BaseModel):
+    id: int
+    first_name: str
+    last_name: str
+    email: str
+
+    class Config:
+        orm_mode = True
+
+
 class ClientCreate(BaseModel):
     client_id: int
     full_name: str

@@ -1,12 +1,32 @@
-from typing import Optional
+from typing import Optional, List, Dict
 from pydantic import BaseModel
+
+from api.client.schemas import JsonClientCreate
+
+
+class JsonOrderListCreate(BaseModel):
+    id: int
+    product: int
+    order: int
+    amount: int
+    price: float
+
+class JsonOrder(BaseModel):
+    id: int
+    total_price: float
+    order_status: str
+    payment_status: str
+    delivery_address: str
+    user: JsonClientCreate
+    orderList: List[JsonOrderListCreate]
 
 
 class OrderInfoCreate(BaseModel):
     order_id: int
     total_price: float
     client_id: int
-    operation_code: str
+    order_status: str
+    payment_status: str
     delivery_address: str
 
 
@@ -14,7 +34,8 @@ class OrderInfoRead(BaseModel):
     order_id: int
     total_price: float
     client_id: int
-    operation_code: str
+    order_status: str
+    payment_status: str
     delivery_address: str
 
     class Config:
@@ -30,7 +51,6 @@ class OrderListCreate(BaseModel):
     order_list_id: int
     item_id: int
     order_info_id: int
-    operation_code: str
     amount: int
     price: float
 
@@ -38,7 +58,6 @@ class OrderListCreate(BaseModel):
 class OrderListRead(BaseModel):
     item_id: int
     order_info_id: int
-    operation_code: str
     amount: int
     price: float
 
@@ -54,7 +73,6 @@ class OrderListReadModified(BaseModel):
     article: str
     category_id: int
     firm: str
-    operation_code: str
     amount: int
     price: float
 

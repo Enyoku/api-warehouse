@@ -12,7 +12,8 @@ class OrderInfo(Base):
     order_id = Column(Integer, primary_key=True)
     total_price = Column(Numeric, nullable=False)
     client_id = Column(Integer, ForeignKey(client.c.client_id))
-    operation_code = Column(String, nullable=False)
+    order_status = Column(String, nullable=False)
+    payment_status = Column(String, nullable=False)
     delivery_address = Column(String, nullable=False)
 
 
@@ -25,7 +26,6 @@ class OrderList(Base):
     order_list_id = Column(Integer, primary_key=True)
     item_id = Column(Integer, ForeignKey(item.c.item_id))
     order_info_id = Column(Integer, ForeignKey(order_info.c.order_id))
-    operation_code = Column(String, nullable=False)
     amount = Column(Integer, nullable=False)
     price = Column(Numeric, nullable=False)
 

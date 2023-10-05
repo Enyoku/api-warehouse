@@ -1,13 +1,16 @@
 from typing import List
+import asyncio
 
 from fastapi import APIRouter, Depends
+from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import insert, select, update, delete
+from sqlalchemy import insert, select, update, delete, exists
 
 from api.database import get_async_session
-from api.order.models import order_info, order_list
+from api.client.models import client
+from api.order.models import order_info, order_list, OrderInfo
 from api.item.models import item
-from api.order.schemas import OrderInfoCreate, OrderInfoRead, OrderInfoUpdate
+from api.order.schemas import OrderInfoCreate, OrderInfoRead, OrderInfoUpdate, JsonOrder
 from api.order.schemas import OrderListCreate, OrderListRead, OrderListReadModified
 
 
@@ -22,6 +25,49 @@ async def create_order_info(new_order: OrderInfoCreate, session: AsyncSession = 
     await session.commit()
     return {"status": "created"}
 
+
+@order_info_router.post("/create")
+async def create_order_by_json(json: JsonOrder, session: AsyncSession = Depends(get_async_session)):
+    order_exists = await session.scalars(select(order_info).filter(order_info.c.order_id == json.id))
+    client_exists = await session.scalars(select(client).where(client.c.client_id == json.user.id))
+
+    # Checking for an existing order
+    if not bool(order_exists.first()):
+        # Checking for an existing client
+        if not bool(client_exists.first()):
+            client_query = insert(client).values(
+                client_id=json.user.id,
+                full_name=json.user.first_name + " " + json.user.last_name,
+                email=json.user.email,
+                address=json.delivery_address
+            )
+            await session.execute(client_query)
+            await session.commit()
+        else:
+            order_info_query = insert(order_info).values(
+                order_id=json.id,
+                total_price=json.total_price,
+                client_id=json.user.id,
+                order_status=json.order_status,
+                payment_status=json.payment_status,
+                delivery_address=json.delivery_address
+            )
+            await session.execute(order_info_query)
+            await session.commit()
+
+            for product in json.orderList:
+                order_list_query = insert(order_list).values(
+                    order_list_id=product.id,
+                    item_id=product.product,
+                    order_info_id=product.order,
+                    amount=product.amount,
+                    price=product.price,
+                )
+                await session.execute(order_list_query)
+                await session.commit()
+            return {"status": "created"}
+    else:
+        return JSONResponse({"error": "Order with this id already exists"}, status_code=400)
 
 @order_info_router.get("", response_model=List[OrderInfoRead])
 async def get_all_order_info(sesion: AsyncSession = Depends(get_async_session)):
