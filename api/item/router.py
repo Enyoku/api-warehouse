@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.item.models import item
 from api.category.models import category
-from api.item.schemas import ItemCreate, ItemRead, ItemUpdate, ItemReadModified
+from api.item.schemas import ItemCreate, ItemRead, ItemUpdate, ItemReadModified, ItemCreateJson
 from api.database import get_async_session
 
 item_router = APIRouter(tags=["Item"], prefix="/item")
@@ -15,6 +15,25 @@ item_router = APIRouter(tags=["Item"], prefix="/item")
 @item_router.post("")
 async def create_item(new_item: ItemCreate, session: AsyncSession = Depends(get_async_session)):
     query = insert(item).values(**new_item.dict())
+    await session.execute(query)
+    await session.commit()
+    return {"status": "created"}
+
+
+@item_router.post("/create")
+async def create_item_by_json(new_item: ItemCreateJson, session: AsyncSession = Depends(get_async_session)):
+    query = insert(item).values(
+        item_id=new_item.id,
+        item_name=new_item.name,
+        article=new_item.article,
+        category_id=new_item.category,
+        firm=new_item.firm,
+        description=new_item.description,
+        price=new_item.price,
+        amount=new_item.amount,
+        created_at=new_item.created_at,
+        updated_at=new_item.updated_at,
+    )
     await session.execute(query)
     await session.commit()
     return {"status": "created"}

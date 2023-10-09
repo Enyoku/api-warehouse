@@ -16,6 +16,19 @@ class ItemCreate(BaseModel):
     updated_at: datetime
 
 
+class ItemCreateJson(BaseModel):
+    id: int
+    name: str
+    article: str
+    firm: str
+    description: str
+    price: float
+    amount: int
+    created_at: datetime
+    updated_at: datetime
+    category: int
+
+
 class ItemRead(BaseModel):
     item_id: int
     item_name: str
