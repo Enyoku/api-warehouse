@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.item.models import item
 from api.category.models import category
-from api.item.schemas import ItemCreate, ItemRead, ItemUpdate, ItemReadModified, ItemCreateJson
+from api.item.schemas import ItemCreate, ItemRead, ItemUpdate, ItemReadModified, ItemCreateJson, ItemUpdateJson
 from api.database import get_async_session
 
 item_router = APIRouter(tags=["Item"], prefix="/item")
@@ -60,6 +60,23 @@ async def get_item_modified(id: int, session: AsyncSession = Depends(get_async_s
 @item_router.patch("/{id}")
 async def update_item(id: int, updated_item: ItemUpdate, session: AsyncSession = Depends(get_async_session)) -> Any:
     query = update(item).values(**updated_item.dict()).where(item.c.item_id == id)
+    await session.execute(query)
+    await session.commit()
+    return {"status": "updated"}
+
+
+@item_router.patch("/{id}/update")
+async def update_item_by_json(id: int, updated_item: ItemUpdateJson, session: AsyncSession = Depends(get_async_session)):
+    query = update(item).values(
+        item_name=updated_item.name,
+        article=updated_item.article,
+        category_id=updated_item.category,
+        firm=updated_item.firm,
+        description=updated_item.description,
+        price=updated_item.price,
+        amount=updated_item.amount,
+        updated_at=updated_item.updated_at,
+    ).where(item.c.item_id == id)
     await session.execute(query)
     await session.commit()
     return {"status": "updated"}
