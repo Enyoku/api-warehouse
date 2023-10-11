@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from api.database import get_async_session
 from api.auth.base_config import current_verified_user
 from .models import category
-from .schemas import CategoryCreate, CategoryRead
+from .schemas import CategoryCreate, CategoryRead, CategoryCreateJson
 
 category_router = APIRouter(tags=["Category"], prefix="/category")
 
@@ -18,7 +18,18 @@ async def create_category(new_category: CategoryCreate, session: AsyncSession = 
     query = insert(category).values(**new_category.dict())
     await session.execute(query)
     await session.commit()
-    return {"status": "ok"}
+    return {"status": "created"}
+
+
+@category_router.post("/create")
+async def create_category_by_json(new_category: CategoryCreateJson, session: AsyncSession = Depends(get_async_session)):
+    query = insert(category).values(
+        category_id=new_category.id,
+        category_name=new_category.name
+    )
+    await session.execute(query)
+    await session.commit()
+    return {"status": "created"}
 
 
 @category_router.get("", response_model=List[CategoryRead])
